@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Call Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+<h1>API Call Example</h1>
+
+<script>
+    // Encryption function in JavaScript using CryptoJS
+    function encryptData(data, key) {
+        const encrypted = CryptoJS.AES.encrypt(data, key);
+        return encrypted.toString();
+    }
+
+    // Decryption function in JavaScript using CryptoJS
+    function decryptData(encryptedData, key) {
+        const decrypted = CryptoJS.AES.decrypt(encryptedData, key);
+        return decrypted.toString(CryptoJS.enc.Utf8);
+    }
+
+    // Replace this key with your actual AES key
+    const aesKey = '2b7e151628aed2a6abf7158809cf4f3c';
+
+
+    function makeApiCall() {
+        var apiUrl = 'http://localhost:8081/api/data';
+
+        // Data to be sent to the API
+        var jsonData = { "name": "John", "age": 30 };
+
+        // Encrypt the data before sending
+        var encryptedData = encryptData(JSON.stringify(jsonData), aesKey);
+
+        // Make the API call using the Fetch API
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Additional headers as needed
+            },
+            body: encryptedData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('API Response:', data);
+                // Handle the API response as needed
+            })
+            .catch(error => console.error('API Error:', error));
+    }
+
+    // Trigger the API call when the page loads (for demonstration purposes)
+    makeApiCall();
+</script>
+</body>
+</html>
